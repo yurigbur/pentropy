@@ -35,7 +35,7 @@ def sections_entropy(path):
     table.field_names = ["Section", "Virt Addr", "Virt Size", "Raw Size", "Entropy"]
     table.align = "r"
     table.align["Section"] = "l"
-    table
+
     for section in pe.sections:
         tmp = [
             section.Name.decode('utf-8'), 
