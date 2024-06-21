@@ -29,20 +29,21 @@ def shannon_entropy(data):
         entropy -= p * math.log(p, 2)
     return entropy
 
-def sections_entropy(path):
+def calculate_section_entropy(path):
     pe = pefile.PE(path)
+
     table = PrettyTable()
     table.field_names = ["Section", "Virt Addr", "Virt Size", "Raw Size", "Entropy"]
     table.align = "r"
     table.align["Section"] = "l"
-    table
+
     for section in pe.sections:
         tmp = [
             section.Name.decode('utf-8'), 
             hex(section.VirtualAddress), 
             hex(section.Misc_VirtualSize), 
             hex(section.SizeOfRawData),
-            str(shannon_entropy(section.get_data()))
+            f"{shannon_entropy(section.get_data()):.4f}"
         ]
         table.add_row(tmp)
 
@@ -56,7 +57,11 @@ def main():
     print(args.file)
 
     with open(target_file, 'rb') as f:
-        sections_entropy(target_file)
+        calculate_section_entropy(target_file)
+    
+    with open(target_file, 'rb') as f:
+        data = f.read()
+        print(f"Overall Entropy: {shannon_entropy(data):.4f}")
 
 
 if __name__ == "__main__":
